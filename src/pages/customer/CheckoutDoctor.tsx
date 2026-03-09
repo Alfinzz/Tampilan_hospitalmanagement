@@ -189,11 +189,10 @@ function CheckoutDoctor() {
               <div className="flex flex-col gap-2 items-center text-center">
                 <p className="flex items-center gap-0.5 font-semibold leading-none">
                   <img
-                    src={`${
-                      doctor.gender == "Male"
+                    src={`${doctor.gender == "Male"
                         ? "/assets/images/icons/man-black-fill.svg"
                         : "/assets/images/icons/woman-black-fill.svg "
-                    }`}
+                      }`}
                     className="size-5"
                     alt="icon"
                   />
@@ -346,7 +345,7 @@ function CheckoutDoctor() {
                       />
                       Bank Name
                     </p>
-                    <p className="font-bold leading-none">BWA BANK</p>
+                    <p className="font-bold leading-none">Amba Bank</p>
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="flex items-center gap-[6px] font-medium text-monday-gray leading-none">
@@ -374,9 +373,8 @@ function CheckoutDoctor() {
                     <div
                       id="Add-Photo"
                       onClick={() => fileInputRef.current?.click()}
-                      className={`absolute flex items-center justify-center rounded-[20px] size-full border-[1.5px] border-dashed border-monday-blue bg-monday-blue/10 cursor-pointer ${
-                        previewImage ? "hidden" : ""
-                      }`}
+                      className={`absolute flex items-center justify-center rounded-[20px] size-full border-[1.5px] border-dashed border-monday-blue bg-monday-blue/10 cursor-pointer ${previewImage ? "hidden" : ""
+                        }`}
                     >
                       <p className="font-bold text-sm leading-none text-monday-blue text-center">
                         Add Proof of Payment +
@@ -398,18 +396,16 @@ function CheckoutDoctor() {
                     <img
                       id="Thumbnail"
                       src={previewImage ?? "notfound.png"}
-                      className={`relative size-full object-cover ${
-                        previewImage ? "" : "hidden"
-                      }`}
+                      className={`relative size-full object-cover ${previewImage ? "" : "hidden"
+                        }`}
                       alt="proof"
                     />
                     <button
                       type="button"
                       id="Change-Photo"
                       onClick={() => fileInputRef.current?.click()}
-                      className={`absolute rounded-full py-4 px-5 bg-monday-black text-nowrap font-bold text-sm text-white h-fit transform -translate-x-1/2 left-1/2 bottom-3 z-20 ${
-                        previewImage ? "" : "hidden"
-                      }`}
+                      className={`absolute rounded-full py-4 px-5 bg-monday-black text-nowrap font-bold text-sm text-white h-fit transform -translate-x-1/2 left-1/2 bottom-3 z-20 ${previewImage ? "" : "hidden"
+                        }`}
                     >
                       Change Image
                     </button>

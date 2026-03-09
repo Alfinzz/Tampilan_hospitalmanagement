@@ -10,10 +10,8 @@ const LoginManager = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && user?.roles) {
-      if (user.roles.includes("manager")) {
-        navigate("/admin/overview");
-      }
+    if (!loading && user?.roles?.some((r) => r.name === "manager")) {
+      navigate("/admin/overview");
     }
   }, [user, loading, navigate]);
 
@@ -22,11 +20,16 @@ const LoginManager = () => {
     setError(null);
 
     try {
+      // 1. Tunggu proses login ke backend selesai
       await login(email, password);
-      if (user && user.roles?.includes("manager")) {
-        navigate("/admin/overview");
-      }
+
+      // 2. JIKA SUKSES (Code sampai sini berarti tidak error)
+      // Langsung paksa pindah halaman sekarang juga
+      navigate("/admin/overview");
+      
     } catch (error) {
+      // 3. Tangkap error jika login gagal
+      console.error("Login Error:", error);
       setError(error instanceof Error ? error.message : "Login failed");
     }
   };

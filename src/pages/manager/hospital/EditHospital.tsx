@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { hospitalSchema, HospitalFormData } from "../../../schemas/hospitalSchema";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/types";
-import { useFetchHospital, useUpdateHospital } from "../../../hooks/useHospitals";
+import { useFetchHospital, useUpdateHospital, useDeleteHospital } from "../../../hooks/useHospitals";
 import UserProfileCard from "../../../components/UserProfileCard";
 
 const EditHospital = () => {
@@ -14,12 +14,13 @@ const EditHospital = () => {
   const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const [imagePreview, setImagePreview] = useState(
-      "/assets/images/icons/gallery-grey.svg"
-    );
+  const [imagePreview, setImagePreview] = useState(
+    "/assets/images/icons/gallery-grey.svg"
+  );
 
   const { data: hospital, isPending: isLoading } = useFetchHospital(Number(id));
   const { mutate: updateHospital, isPending: isUpdating } = useUpdateHospital();
+  const { mutate: deleteHospital, isPending: isDeleting } = useDeleteHospital();
 
   const {
     register,
@@ -40,7 +41,7 @@ const EditHospital = () => {
       setValue("address", hospital.address);
       setValue("phone", hospital.phone);
       if (hospital.photo) {
-        setImagePreview(hospital.photo);  
+        setImagePreview(hospital.photo);
       }
     }
   }, [hospital, setValue]);
@@ -68,6 +69,17 @@ const EditHospital = () => {
         },
       }
     );
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this hospital? This action cannot be undone.")) {
+      deleteHospital(Number(id), {
+        onSuccess: () => navigate("/admin/hospitals"),
+        onError: (error) => {
+          alert("Failed to delete hospital: " + (error.message || "Unknown error"));
+        },
+      });
+    }
   };
 
   if (isLoading) return <p>Loading hospital data...</p>;
@@ -209,10 +221,9 @@ const EditHospital = () => {
                     type="text"
                     {...register("name")}
                     className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300
-                      ${
-                        errors.name
-                          ? "group-[&.invalid]/errorState:border-monday-red"
-                          : "border-monday-border"
+                      ${errors.name
+                        ? "group-[&.invalid]/errorState:border-monday-red"
+                        : "border-monday-border"
                       }`}
                     placeholder=""
                   />
@@ -246,10 +257,9 @@ const EditHospital = () => {
                     type="tel"
                     {...register("phone")}
                     className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300
-                      ${
-                        errors.phone
-                          ? "group-[&.invalid]/errorState:border-monday-red"
-                          : "border-monday-border"
+                      ${errors.phone
+                        ? "group-[&.invalid]/errorState:border-monday-red"
+                        : "border-monday-border"
                       }`}
                     placeholder=""
                   />
@@ -269,11 +279,10 @@ const EditHospital = () => {
               </p>
               <div className="group/errorState flex flex-col gap-2 invalid">
                 <label
-                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${
-                    errors.about
-                      ? "group-[&.invalid]/errorState:border-monday-red"
-                      : "border-monday-border"
-                  } focus-within:border-monday-black`}
+                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${errors.about
+                    ? "group-[&.invalid]/errorState:border-monday-red"
+                    : "border-monday-border"
+                    } focus-within:border-monday-black`}
                 >
                   <div className="flex h-full pr-4 pt-2 border-r-[1.5px] border-monday-border ">
                     <img
@@ -310,11 +319,10 @@ const EditHospital = () => {
               </p>
               <div className="group/errorState flex flex-col gap-2 invalid">
                 <label
-                  className={`group relative rounded-3xl border-[1.5px] focus-within:border-monday-black transition-300 overflow-hidden w-[500px] ${
-                    errors.city
-                      ? "group-[&.invalid]/errorState:border-monday-red"
-                      : "border-monday-border"
-                  }`}
+                  className={`group relative rounded-3xl border-[1.5px] focus-within:border-monday-black transition-300 overflow-hidden w-[500px] ${errors.city
+                    ? "group-[&.invalid]/errorState:border-monday-red"
+                    : "border-monday-border"
+                    }`}
                 >
                   <div className="flex items-center pr-4 absolute transform -translate-y-1/2 top-1/2 left-6 border-r-[1.5px] border-monday-border ">
                     <img
@@ -328,12 +336,25 @@ const EditHospital = () => {
                   </p>
                   <select
                     id=""
-                    {...register("city")} 
+                    {...register("city")}
                     className="appearance-none w-full h-[72px] font-semibold text-lg outline-none pl-20 pr-6 pb-[14.5px] pt-[32px]"
                   >
                     <option value={hospital?.city}>{hospital?.city}</option>
                     <option value="Jakarta">Jakarta</option>
+                    <option value="Surabaya">Surabaya</option>
+                    <option value="Bandung">Bandung</option>
+                    <option value="Medan">Medan</option>
+                    <option value="Semarang">Semarang</option>
+                    <option value="Makassar">Makassar</option>
+                    <option value="Palembang">Palembang</option>
+                    <option value="Tangerang">Tangerang</option>
+                    <option value="Depok">Depok</option>
+                    <option value="Bekasi">Bekasi</option>
                     <option value="Bogor">Bogor</option>
+                    <option value="Yogyakarta">Yogyakarta</option>
+                    <option value="Malang">Malang</option>
+                    <option value="Denpasar">Denpasar</option>
+                    <option value="Balikpapan">Balikpapan</option>
                   </select>
                   <img
                     src="/assets/images/icons/arrow-down-black.svg"
@@ -368,10 +389,9 @@ const EditHospital = () => {
                     type="text"
                     {...register("post_code")}
                     className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300
-                      ${
-                        errors.post_code
-                          ? "group-[&.invalid]/errorState:border-monday-red"
-                          : "border-monday-border"
+                      ${errors.post_code
+                        ? "group-[&.invalid]/errorState:border-monday-red"
+                        : "border-monday-border"
                       }`}
                     placeholder=""
                   />
@@ -391,11 +411,10 @@ const EditHospital = () => {
               </p>
               <div className="group/errorState flex flex-col gap-2 invalid">
                 <label
-                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${
-                    errors.address
-                      ? "group-[&.invalid]/errorState:border-monday-red"
-                      : "border-monday-border"
-                  } focus-within:border-monday-black`}
+                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${errors.address
+                    ? "group-[&.invalid]/errorState:border-monday-red"
+                    : "border-monday-border"
+                    } focus-within:border-monday-black`}
                 >
                   <div className="flex h-full pr-4 pt-2 border-r-[1.5px] border-monday-border ">
                     <img
@@ -425,18 +444,29 @@ const EditHospital = () => {
                 )}
               </div>
             </div>
-            <div className="flex items-center justify-end gap-4">
-              <Link to={`/admin/hospitals/`}
-                className="btn btn-red font-semibold"
-              >
-                Cancel
-              </Link>
+            <div className="flex items-center justify-between">
               <button
-                type="submit"
-                className="btn btn-primary font-semibold rounded-full"
+                type="button"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="btn font-semibold rounded-full"
+                style={{ backgroundColor: '#dc2626', color: 'white' }}
               >
-                {isUpdating ? "Saving..." : "Save hospital"}
+                {isDeleting ? "Deleting..." : "Delete Hospital"}
               </button>
+              <div className="flex items-center gap-4">
+                <Link to={`/admin/hospitals/`}
+                  className="btn btn-red font-semibold"
+                >
+                  Cancel
+                </Link>
+                <button
+                  type="submit"
+                  className="btn btn-primary font-semibold rounded-full"
+                >
+                  {isUpdating ? "Saving..." : "Save hospital"}
+                </button>
+              </div>
             </div>
           </form>
         </main>

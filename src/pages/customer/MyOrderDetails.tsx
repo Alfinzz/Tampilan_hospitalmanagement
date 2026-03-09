@@ -1,15 +1,20 @@
 import { Link, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { useMyOrderDetails } from "../../hooks/useBookings";
+import { useCustomerTreatmentReport } from "../../hooks/useTreatmentReport";
 import { useState } from "react";
 import { ImagePreviewModal } from "../../components/ImagePreviewModal";
+import RatingFormModal from "../../components/RatingFormModal";
+import RatingStars from "../../components/RatingStars";
 
 function MyOrderDetails() {
   const { orderId } = useParams();
 
   const { data, isPending, isError } = useMyOrderDetails(Number(orderId));
+  const { data: treatmentReport } = useCustomerTreatmentReport(Number(orderId));
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
 
   if (isPending) return <p>Loading...</p>;
   if (isError || !data) return <p>Order not found</p>;
@@ -17,6 +22,7 @@ function MyOrderDetails() {
   const isRejected = data.status === "Rejected";
   const isApproved = data.status === "Approved";
   const isWaiting = data.status === "Waiting";
+  const isCompleted = data.status === "Completed";
 
   return (
     <>
@@ -97,6 +103,21 @@ function MyOrderDetails() {
                     />
                     <p className="font-bold text-sm leading-[1.4em] text-white">
                       Doctor confirmed. See you soon!
+                    </p>
+                  </div>
+                </div>
+              )}
+              {isCompleted && (
+                <div
+                  id="Note-Emerald"
+                  className="relative w-full min-h-16 rounded-t-[20px] overflow-hidden bg-emerald-500"
+                >
+                  <div className="relative flex items-center w-full h-full p-5 gap-[10px]">
+                    <svg className="flex size-6 shrink-0 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="font-bold text-sm leading-[1.4em] text-white">
+                      Appointment completed. Check your treatment report below.
                     </p>
                   </div>
                 </div>
@@ -184,6 +205,22 @@ function MyOrderDetails() {
                         </p>
                         <p className="rounded-[4px] py-[6px] px-2 bg-monday-red/10 font-bold text-monday-red">
                           Rejected
+                        </p>
+                      </div>
+                    )}
+
+                    {isCompleted && (
+                      <div className="flex items-center justify-between">
+                        <p className="flex items-center gap-[6px] font-medium text-monday-gray leading-none">
+                          <img
+                            src="/assets/images/icons/timer-grey.svg"
+                            className="size-5"
+                            alt="icon"
+                          />
+                          Status
+                        </p>
+                        <p className="rounded-[4px] py-[6px] px-2 bg-emerald-500/10 font-bold text-emerald-600">
+                          Completed
                         </p>
                       </div>
                     )}
@@ -345,7 +382,7 @@ function MyOrderDetails() {
                         />
                         Bank Name
                       </p>
-                      <p className="font-bold leading-none">BWA BANK</p>
+                      <p className="font-bold leading-none">Amba Bank</p>
                     </div>
                     <div className="flex items-center justify-between">
                       <p className="flex items-center gap-[6px] font-medium text-monday-gray leading-none">
@@ -393,6 +430,117 @@ function MyOrderDetails() {
                   </div>
                 </div>
               </div>
+
+              {/* Treatment Report Section - Only show for completed appointments */}
+              {isCompleted && treatmentReport && (
+                <div className="flex flex-col gap-4">
+                  <p className="font-bold">Treatment Report</p>
+                  <div className="flex flex-col rounded-2xl border-2 border-emerald-500 p-5 px-4 gap-4 bg-emerald-50/50">
+                    <div className="flex items-center gap-2 text-emerald-600">
+                      <svg className="flex size-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="font-semibold text-sm">Report from your doctor</span>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-1">
+                        <p className="text-sm font-medium text-monday-gray">Diagnosis</p>
+                        <p className="font-semibold">{treatmentReport.diagnosis}</p>
+                      </div>
+
+                      {treatmentReport.prescription && (
+                        <div className="flex flex-col gap-1">
+                          <p className="text-sm font-medium text-monday-gray">Prescription</p>
+                          <p className="font-semibold whitespace-pre-wrap">{treatmentReport.prescription}</p>
+                        </div>
+                      )}
+
+                      {treatmentReport.doctor_notes && (
+                        <div className="flex flex-col gap-1">
+                          <p className="text-sm font-medium text-monday-gray">Doctor Notes</p>
+                          <p className="font-semibold whitespace-pre-wrap">{treatmentReport.doctor_notes}</p>
+                        </div>
+                      )}
+
+                      {treatmentReport.next_visit_date && (
+                        <div className="flex flex-col gap-1 p-3 bg-monday-blue/10 rounded-xl">
+                          <p className="text-sm font-medium text-monday-gray">Next Visit</p>
+                          <p className="font-bold text-monday-blue">
+                            {format(new Date(treatmentReport.next_visit_date), "dd MMMM yyyy")}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* No report yet for completed */}
+              {isCompleted && !treatmentReport && (
+                <div className="flex flex-col gap-4">
+                  <p className="font-bold">Treatment Report</p>
+                  <div className="flex flex-col items-center rounded-2xl border border-dashed border-monday-stroke p-6 gap-3 text-center">
+                    <svg className="size-12 text-monday-gray/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p className="text-monday-gray font-medium">Your doctor hasn't submitted the treatment report yet.</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Rating Section - Show for completed appointments */}
+              {isCompleted && data.rated_at && (
+                <div className="flex flex-col gap-4">
+                  <p className="font-bold">Your Review</p>
+                  <div className="flex flex-col gap-4 rounded-2xl border border-monday-stroke p-5">
+                    {/* Doctor Rating */}
+                    <div className="flex flex-col gap-3 pb-4 border-b border-monday-stroke">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src="/assets/images/icons/profile-circle-grey.svg"
+                          className="size-5"
+                          alt="doctor"
+                        />
+                        <p className="font-semibold">Doctor Rating</p>
+                      </div>
+                      <RatingStars rating={data.doctor_rating || 0} size="md" />
+                      {data.doctor_review && (
+                        <p className="text-monday-gray">{data.doctor_review}</p>
+                      )}
+                    </div>
+
+                    {/* Hospital Rating */}
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src="/assets/images/icons/hospital-grey.svg"
+                          className="size-5"
+                          alt="hospital"
+                        />
+                        <p className="font-semibold">Hospital Rating</p>
+                      </div>
+                      <RatingStars rating={data.hospital_rating || 0} size="md" />
+                      {data.hospital_review && (
+                        <p className="text-monday-gray">{data.hospital_review}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Rating Button - Show for completed unrated appointments */}
+              {isCompleted && !data.rated_at && (
+                <div className="flex flex-col gap-4">
+                  <button
+                    onClick={() => setIsRatingModalOpen(true)}
+                    className="w-full py-4 rounded-full bg-monday-orange text-white font-semibold text-lg hover:bg-monday-orange/90 transition-colors"
+                  >
+                    Rate This Appointment
+                  </button>
+                </div>
+              )}
+
               <div
                 id="Bottom-Bar"
                 className="flex relative w-full h-[104px] -ml-5"
@@ -423,6 +571,15 @@ function MyOrderDetails() {
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
           src={data.proof}
+        />
+      )}
+
+      {isRatingModalOpen && (
+        <RatingFormModal
+          orderId={Number(orderId)}
+          doctorName={data.doctor.name}
+          hospitalName={data.doctor.hospital.name}
+          onClose={() => setIsRatingModalOpen(false)}
         />
       )}
     </>

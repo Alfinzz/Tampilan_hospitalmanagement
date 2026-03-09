@@ -32,10 +32,24 @@ function RegisterCustomer() {
   const onSubmit = (data: CustomerRegisterFormData) => {
     setError("root", { type: "server", message: "" });
 
+    // Debug: Log data sebelum dikirim
+    console.log("📤 Form data sebelum dikirim:", {
+      ...data,
+      password: "***hidden***",
+      password_confirmation: "***hidden***",
+      photo: data.photo instanceof File ? `File(${data.photo.name})` : data.photo,
+    });
+
     registerCustomer(data, {
-      onSuccess: () => navigate("/customer/login"),
-      onError: (error: AxiosError<ApiErrorResponse>) => {
-        const { message, errors: fieldErrors } = error.response?.data || {};
+      onSuccess: () => {
+        console.log("✅ Register berhasil!");
+        navigate("/customer/login");
+      },
+      onError: (error: unknown) => {
+        const axiosError = error as AxiosError<ApiErrorResponse>;
+        console.error("❌ Register error:", axiosError?.response?.data);
+        
+        const { message, errors: fieldErrors } = axiosError?.response?.data || {};
         if (message) {
           setError("root", { type: "server", message });
         }
@@ -88,12 +102,37 @@ function RegisterCustomer() {
                   type="file"
                   id="File-Input"
                   ref={fileInputRef}
-                  accept="image/*"
+                  accept="image/jpeg,image/jpg,image/png"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
+                      // Validasi file type
+                      const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+                      if (!validTypes.includes(file.type)) {
+                        setError("photo", {
+                          type: "manual",
+                          message: "File harus berupa gambar (JPEG, JPG, atau PNG)"
+                        });
+                        return;
+                      }
+                      
+                      // Validasi file size (max 2MB)
+                      const maxSize = 2 * 1024 * 1024;
+                      if (file.size > maxSize) {
+                        setError("photo", {
+                          type: "manual",
+                          message: "Ukuran file maksimal 2MB"
+                        });
+                        return;
+                      }
+                      
                       setValue("photo", file);
                       setImagePreview(URL.createObjectURL(file));
+                      
+                      // Clear error jika ada
+                      if (errors.photo) {
+                        setError("photo", { type: "manual", message: "" });
+                      }
                     } else {
                       setImagePreview(
                         "/assets/images/icons/profile-photo-default.svg"
@@ -109,7 +148,7 @@ function RegisterCustomer() {
                 onClick={() => fileInputRef.current?.click()}
                 className="btn btn-black w-fit font-medium text-sm text-nowrap gap-[6px] p-[14px] leading-none h-[46px]"
               >
-                {imagePreview !== "/assets/images/icons/gallery-grey.svg"
+                {imagePreview !== "/assets/images/icons/profile-photo-default.svg"
                   ? "Change Photo"
                   : "Add Photo"}
                 <img
@@ -203,8 +242,7 @@ function RegisterCustomer() {
                   </p>
                   <input
                     type="radio"
-                    value="Male"
-                    id=""
+                    value="male"
                     {...register("gender")}
                     className="absolute opacity-0"
                   />
@@ -230,8 +268,7 @@ function RegisterCustomer() {
                   <input
                     type="radio"
                     {...register("gender")}
-                    value="Female"
-                    id=""
+                    value="female"
                     className="absolute opacity-0"
                   />
                 </label>

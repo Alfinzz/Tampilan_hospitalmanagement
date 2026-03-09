@@ -10,6 +10,7 @@ import {
 import {
   useFetchSpecialist,
   useUpdateSpecialist,
+  useDeleteSpecialist,
 } from "../../../hooks/useSpecialists";
 import { ApiErrorResponse } from "../../../types/types";
 import { AxiosError } from "axios";
@@ -30,6 +31,8 @@ const EditSpecialist = () => {
 
   const { mutate: updateSpecialist, isPending: isUpdating } =
     useUpdateSpecialist();
+  const { mutate: deleteSpecialist, isPending: isDeleting } =
+    useDeleteSpecialist();
 
   const {
     register,
@@ -73,6 +76,17 @@ const EditSpecialist = () => {
         },
       }
     );
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this specialist? This action cannot be undone.")) {
+      deleteSpecialist(Number(id), {
+        onSuccess: () => navigate("/admin/specialists"),
+        onError: (error) => {
+          alert("Failed to delete specialist: " + (error.message || "Unknown error"));
+        },
+      });
+    }
   };
 
   if (isLoading) return <p>Loading specialist details...</p>;
@@ -215,11 +229,10 @@ const EditSpecialist = () => {
                   <input
                     type="text"
                     {...register("name")}
-                    className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300 ${
-                      errors.name
-                        ? "group-[&.invalid]/errorState:border-monday-red"
-                        : "border-monday-border"
-                    }`}
+                    className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300 ${errors.name
+                      ? "group-[&.invalid]/errorState:border-monday-red"
+                      : "border-monday-border"
+                      }`}
                     placeholder=""
                   />
                 </label>
@@ -253,10 +266,9 @@ const EditSpecialist = () => {
                     type="number"
                     {...register("price")}
                     className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300
-                      ${
-                        errors.price
-                          ? "group-[&.invalid]/errorState:border-monday-red"
-                          : "border-monday-border"
+                      ${errors.price
+                        ? "group-[&.invalid]/errorState:border-monday-red"
+                        : "border-monday-border"
                       }`}
                     placeholder=""
                   />
@@ -276,11 +288,10 @@ const EditSpecialist = () => {
               </p>
               <div className="group/errorState flex flex-col gap-2 invalid">
                 <label
-                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${
-                    errors.about
-                      ? "group-[&.invalid]/errorState:border-monday-red"
-                      : "border-monday-border"
-                  } focus-within:border-monday-black`}
+                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${errors.about
+                    ? "group-[&.invalid]/errorState:border-monday-red"
+                    : "border-monday-border"
+                    } focus-within:border-monday-black`}
                 >
                   <div className="flex h-full pr-4 pt-2 border-r-[1.5px] border-monday-border ">
                     <img
@@ -311,20 +322,31 @@ const EditSpecialist = () => {
                 )}
               </div>
             </div>
-            <div className="flex items-center justify-end gap-4">
-              <Link
-                to={`/admin/specialists/`}
-                className="btn btn-red font-semibold"
-              >
-                Cancel
-              </Link>
+            <div className="flex items-center justify-between">
               <button
-                disabled={isUpdating}
-                type="submit"
-                className="btn btn-primary font-semibold rounded-full"
+                type="button"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="btn font-semibold rounded-full"
+                style={{ backgroundColor: '#dc2626', color: 'white' }}
               >
-                {isUpdating ? "Saving..." : "Save Specialist"}
+                {isDeleting ? "Deleting..." : "Delete Specialist"}
               </button>
+              <div className="flex items-center gap-4">
+                <Link
+                  to={`/admin/specialists/`}
+                  className="btn btn-red font-semibold"
+                >
+                  Cancel
+                </Link>
+                <button
+                  disabled={isUpdating}
+                  type="submit"
+                  className="btn btn-primary font-semibold rounded-full"
+                >
+                  {isUpdating ? "Saving..." : "Save Specialist"}
+                </button>
+              </div>
             </div>
           </form>
         </main>

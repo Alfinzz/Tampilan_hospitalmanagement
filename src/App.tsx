@@ -35,6 +35,15 @@ import CustomerSettings from "./pages/customer/CustomerSettings";
 import MyOrderDetails from "./pages/customer/MyOrderDetails";
 import BrowseSpecialist from "./pages/customer/BrowseSpecialist";
 import Onboarding from "./pages/customer/Onboarding";
+import DemoShowcase from "./pages/customer/DemoShowcase";
+import LoginDoctor from "./pages/doctor/LoginDoctor";
+import DoctorDashboard from "./pages/doctor/DoctorDashboard";
+import DoctorAppointmentDetails from "./pages/doctor/DoctorAppointmentDetails";
+import DoctorProfile from "./pages/doctor/DoctorProfile";
+import EditDoctorProfile from "./pages/doctor/EditDoctorProfile";
+import DoctorAppointments from "./pages/doctor/DoctorAppointments";
+import DoctorTreatmentReport from "./pages/doctor/DoctorTreatmentReport";
+import CustomerInbox from "./pages/customer/CustomerInbox";
 
 const queryClient = new QueryClient();
 
@@ -45,11 +54,72 @@ function App() {
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Onboarding />} />
+            <Route path="/demo" element={<DemoShowcase />} />
             <Route path="/customer/login" element={<LoginCustomer />} />
             <Route path="/customer/register" element={<RegisterCustomer />} />
 
             <Route path="/admin/login" element={<LoginManager />} />
+            <Route path="/doctor/login" element={<LoginDoctor />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
+
+            {/* Doctor Routes */}
+            <Route
+              path="/doctor/dashboard"
+              element={
+                <ProtectedRoute roles={["doctor"]}>
+                  <DoctorDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/appointments"
+              element={
+                <ProtectedRoute roles={["doctor"]}>
+                  <DoctorAppointments />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/appointments/:id"
+              element={
+                <ProtectedRoute roles={["doctor"]}>
+                  <DoctorAppointmentDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/appointments/:id/treatment-report"
+              element={
+                <ProtectedRoute roles={["doctor"]}>
+                  <DoctorTreatmentReport />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/profile"
+              element={
+                <ProtectedRoute roles={["doctor"]}>
+                  <DoctorProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/doctor/profile/edit"
+              element={
+                <ProtectedRoute roles={["doctor"]}>
+                  <EditDoctorProfile />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/customer/inbox"
+              element={
+                <ProtectedRoute roles={["customer"]}>
+                  <CustomerInbox />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/customer/discover"

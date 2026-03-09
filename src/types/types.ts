@@ -46,7 +46,7 @@ export interface BookingTransaction {
   id: number;
   started_at: string;
   time_at: string;
-  status: "Approved" | "Rejected" | "Waiting";
+  status: "Approved" | "Rejected" | "Waiting" | "Completed";
   user: User;
   doctor: Doctor;
   doctor_id: number;
@@ -54,6 +54,12 @@ export interface BookingTransaction {
   tax_total: number;
   grand_total: number;
   proof: string;
+  doctor_rating?: number;
+  doctor_review?: string;
+  hospital_rating?: number;
+  hospital_review?: string;
+  rated_at?: string;
+  can_be_rated?: boolean;
 }
 
 export interface CreateSpecialistPayload {
@@ -127,7 +133,7 @@ export interface BookingInfo {
 export interface AssignHospitalSpecialistPayload {
   hospital_id: number;
   specialist_id: number;
-} 
+}
 
 export interface AuthProviderProps {
   children: ReactNode;

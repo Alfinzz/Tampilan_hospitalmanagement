@@ -191,10 +191,9 @@ const AddHospital = () => {
                     type="text"
                     {...register("name")}
                     className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300
-                      ${
-                        errors.name
-                          ? "group-[&.invalid]/errorState:border-monday-red"
-                          : "border-monday-border"
+                      ${errors.name
+                        ? "group-[&.invalid]/errorState:border-monday-red"
+                        : "border-monday-border"
                       }`}
                     placeholder=""
                   />
@@ -228,10 +227,9 @@ const AddHospital = () => {
                     type="tel"
                     {...register("phone")}
                     className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300
-                      ${
-                        errors.phone
-                          ? "group-[&.invalid]/errorState:border-monday-red"
-                          : "border-monday-border"
+                      ${errors.phone
+                        ? "group-[&.invalid]/errorState:border-monday-red"
+                        : "border-monday-border"
                       }`}
                     placeholder=""
                   />
@@ -251,11 +249,10 @@ const AddHospital = () => {
               </p>
               <div className="group/errorState flex flex-col gap-2 invalid">
                 <label
-                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${
-                    errors.about
+                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${errors.about
                       ? "group-[&.invalid]/errorState:border-monday-red"
                       : "border-monday-border"
-                  } focus-within:border-monday-black`}
+                    } focus-within:border-monday-black`}
                 >
                   <div className="flex h-full pr-4 pt-2 border-r-[1.5px] border-monday-border ">
                     <img
@@ -292,11 +289,10 @@ const AddHospital = () => {
               </p>
               <div className="group/errorState flex flex-col gap-2 invalid">
                 <label
-                  className={`group relative rounded-3xl border-[1.5px] focus-within:border-monday-black transition-300 overflow-hidden w-[500px] ${
-                    errors.city
+                  className={`group relative rounded-3xl border-[1.5px] focus-within:border-monday-black transition-300 overflow-hidden w-[500px] ${errors.city
                       ? "group-[&.invalid]/errorState:border-monday-red"
                       : "border-monday-border"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center pr-4 absolute transform -translate-y-1/2 top-1/2 left-6 border-r-[1.5px] border-monday-border ">
                     <img
@@ -315,7 +311,20 @@ const AddHospital = () => {
                   >
                     <option value="">Select</option>
                     <option value="Jakarta">Jakarta</option>
+                    <option value="Surabaya">Surabaya</option>
+                    <option value="Bandung">Bandung</option>
+                    <option value="Medan">Medan</option>
+                    <option value="Semarang">Semarang</option>
+                    <option value="Makassar">Makassar</option>
+                    <option value="Palembang">Palembang</option>
+                    <option value="Tangerang">Tangerang</option>
+                    <option value="Depok">Depok</option>
+                    <option value="Bekasi">Bekasi</option>
                     <option value="Bogor">Bogor</option>
+                    <option value="Yogyakarta">Yogyakarta</option>
+                    <option value="Malang">Malang</option>
+                    <option value="Denpasar">Denpasar</option>
+                    <option value="Balikpapan">Balikpapan</option>
                   </select>
                   <img
                     src="/assets/images/icons/arrow-down-black.svg"
@@ -350,10 +359,9 @@ const AddHospital = () => {
                     type="text"
                     {...register("post_code")}
                     className={`appearance-none w-full h-[72px] font-semibold text-lg rounded-3xl border-[2px] pl-20 pr-6 pb-[14.5px] pt-[34.5px] placeholder-shown:pt-[14.5px] focus:border-monday-black transition-300
-                      ${
-                        errors.post_code
-                          ? "group-[&.invalid]/errorState:border-monday-red"
-                          : "border-monday-border"
+                      ${errors.post_code
+                        ? "group-[&.invalid]/errorState:border-monday-red"
+                        : "border-monday-border"
                       }`}
                     placeholder=""
                   />
@@ -373,11 +381,10 @@ const AddHospital = () => {
               </p>
               <div className="group/errorState flex flex-col gap-2 invalid">
                 <label
-                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${
-                    errors.address
+                  className={`group flex py-4 px-6 rounded-3xl border-[2px] transition-300 w-[500px] ${errors.address
                       ? "group-[&.invalid]/errorState:border-monday-red"
                       : "border-monday-border"
-                  } focus-within:border-monday-black`}
+                    } focus-within:border-monday-black`}
                 >
                   <div className="flex h-full pr-4 pt-2 border-r-[1.5px] border-monday-border ">
                     <img

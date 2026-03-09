@@ -24,7 +24,7 @@ function MyOrders() {
           className="flex items-center justify-between h-[112px] w-full p-5 pt-8 bg-white"
         >
           <div className="flex items-center w-full gap-2">
-          <Link to={'/customer/settings'}>
+            <Link to={'/customer/settings'}>
               <div className="relative flex size-[60px] shrink-0 items-center justify-center">
                 <div
                   id="Avatar-Container"
@@ -293,11 +293,16 @@ function MyOrders() {
               />
             </a>
             <div className="relative grid grid-cols-2 justify-evenly pr-[30px] h-full px-6">
-              <a href="#" className="group menu">
+              <Link to="/customer/inbox" className="group menu">
                 <div className="flex flex-col h-full items-center gap-2 pt-6">
                   <img
                     src="/assets/images/icons/direct-inbox-grey-fill-opacity.svg"
-                    className="flex size-6 shrink-0"
+                    className="flex size-6 shrink-0 group-[.active]:hidden"
+                    alt="icon"
+                  />
+                  <img
+                    src="/assets/images/icons/direct-inbox-blue-fill-opacity.svg"
+                    className="size-6 shrink-0 hidden group-[.active]:flex"
                     alt="icon"
                   />
                   <span className="font-semibold leading-none text-monday-gray group-[&.active]:text-monday-blue">
@@ -309,7 +314,7 @@ function MyOrders() {
                     alt="active"
                   />
                 </div>
-              </a>
+              </Link>
               <Link to="/customer/settings" className="group menu">
                 <div className="flex flex-col h-full items-center gap-2 pt-6">
                   <img

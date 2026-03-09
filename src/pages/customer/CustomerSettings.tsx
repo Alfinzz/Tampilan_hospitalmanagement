@@ -72,7 +72,7 @@ function CustomerSettings() {
                   src={`${
                     user.gender == "Male"
                       ? "/assets/images/icons/man-grey.svg"
-                      : "/assets/images/icons/woman-grey.svg "
+                      : "/assets/images/icons/woman-grey.svg"
                   }`}
                   className="flex size-5 shrink-0"
                   alt="icon"

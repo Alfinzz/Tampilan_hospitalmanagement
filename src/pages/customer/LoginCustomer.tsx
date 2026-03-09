@@ -9,11 +9,11 @@ const LoginCustomer = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  // useEffect ini tetap disimpan untuk kasus user yang SUDAH login 
+  // dan iseng buka halaman /login lagi (agar otomatis dilempar ke dashboard)
   useEffect(() => {
-    if (!loading && user?.roles) {
-      if (user.roles.includes("customer")) {
-        navigate("/customer/discover");
-      }
+    if (!loading && user?.roles?.some((r) => r.name === "customer")) {
+      navigate("/customer/discover");
     }
   }, [user, loading, navigate]);
 
@@ -22,16 +22,21 @@ const LoginCustomer = () => {
     setError(null);
 
     try {
+      // 1. Tunggu proses login ke backend selesai
       await login(email, password);
-      if (user && user.roles?.includes("customer")) {
-        navigate("/customer/discover");
-      }
+
+      // 2. JIKA SUKSES (Code sampai sini berarti tidak error)
+      // Langsung paksa pindah halaman sekarang juga
+      navigate("/customer/discover");
+      
     } catch (error) {
+      // 3. Tangkap error jika login gagal
+      console.error("Login Error:", error);
       setError(error instanceof Error ? error.message : "Login failed");
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="p-10 text-center">Loading...</p>;
 
   return (
     <div id="Mobile-Body" className="flex flex-col flex-1 bg-[#dae1e9]">
@@ -48,7 +53,12 @@ const LoginCustomer = () => {
 
         <form onSubmit={handleLogin} className="flex flex-1 flex-col">
           <div className="flex flex-col py-6 px-5 gap-8 bg-white mt-2 flex-1">
-            {error && <p className="text-monday-red">{error}</p>}
+            {error && (
+              <div className="p-3 bg-red-100 text-monday-red rounded-xl text-sm font-semibold border border-red-200">
+                {error}
+              </div>
+            )}
+            
             <div className="flex flex-col gap-2">
               <p className="font-medium text-monday-gray">Email Address</p>
               <div className="group/errorState flex flex-col gap-2">
@@ -72,11 +82,9 @@ const LoginCustomer = () => {
                     placeholder=""
                   />
                 </label>
-                <span className="font-semibold text-sm text-monday-red hidden leading-none group-[&.invalid]/errorState:block">
-                  Lorem dolor error message here
-                </span>
               </div>
             </div>
+            
             <div className="flex flex-col gap-2">
               <p className="font-medium text-monday-gray">Password</p>
               <div className="group/errorState flex flex-col gap-2">
@@ -99,9 +107,6 @@ const LoginCustomer = () => {
                     placeholder=""
                   />
                 </label>
-                <span className="font-semibold text-sm text-monday-red hidden leading-none group-[&.invalid]/errorState:block">
-                  Lorem dolor error message here
-                </span>
               </div>
               <a
                 href="#"
@@ -111,11 +116,12 @@ const LoginCustomer = () => {
               </a>
             </div>
           </div>
+          
           <div id="Bottom-Bar" className="flex relative w-full h-[138px] mt-2">
             <div className="fixed z-30 bottom-0 flex flex-col gap-3 w-full max-w-[640px] px-5 py-6 bg-white border-t border-monday-stroke">
               <button
                 type="submit"
-                className="flex items-center w-full h-[56px] justify-center gap-[6px] rounded-2xl py-4 px-6 bg-monday-blue"
+                className="flex items-center w-full h-[56px] justify-center gap-[6px] rounded-2xl py-4 px-6 bg-monday-blue hover:bg-blue-700 transition-colors"
               >
                 <span className="font-semibold text-lg leading-none text-white">
                   Sign In

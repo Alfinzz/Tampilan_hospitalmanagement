@@ -1,6 +1,6 @@
 import { useFetchSpecialists } from "../../hooks/useSpecialists";
 import { useFetchDoctors } from "../../hooks/useDoctors";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { SwiperSlide, Swiper } from "swiper/react";
 
@@ -8,11 +8,11 @@ function DiscoverPage() {
   const { user } = useAuth();
 
   const {
-    data: specialists, 
+    data: specialists,
   } = useFetchSpecialists();
 
   const {
-    data: doctors, 
+    data: doctors,
   } = useFetchDoctors();
 
   if (!user) return <p className="p-8">User not logged in.</p>;
@@ -440,11 +440,16 @@ function DiscoverPage() {
               />
             </a>
             <div className="relative grid grid-cols-2 justify-evenly pr-[30px] h-full px-6">
-              <a href="#" className="group menu">
+              <Link to="/customer/inbox" className="group menu">
                 <div className="flex flex-col h-full items-center gap-2 pt-6">
                   <img
                     src="/assets/images/icons/direct-inbox-grey-fill-opacity.svg"
-                    className="flex size-6 shrink-0"
+                    className="flex size-6 shrink-0 group-[.active]:hidden"
+                    alt="icon"
+                  />
+                  <img
+                    src="/assets/images/icons/direct-inbox-blue-fill-opacity.svg"
+                    className="size-6 shrink-0 hidden group-[.active]:flex"
                     alt="icon"
                   />
                   <span className="font-semibold leading-none text-monday-gray group-[&.active]:text-monday-blue">
@@ -456,8 +461,8 @@ function DiscoverPage() {
                     alt="active"
                   />
                 </div>
-              </a>
-              <Link to="/customer/settings"  className="group menu">
+              </Link>
+              <Link to="/customer/settings" className="group menu">
                 <div className="flex flex-col h-full items-center gap-2 pt-6">
                   <img
                     src="/assets/images/icons/setting-2-grey-fill-opacity.svg"
